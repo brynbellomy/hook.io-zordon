@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+var Zordon = require('../lib/zordon').Zordon
+var optimist = require('optimist')
+               .usage('Usage: zordon --ns myApp --name the-zordonicus-hook -l 123.45.67.8:3344 --known aaaa.com:4999 -k bbbb.foobar.net -k 127.0.0.1')
+               .describe('help', 'Show this help information.')
+               .describe('known', 'A known remote Zordon host to contact.  Will accept either a host and/or port, separated by a colon if both are present.')
+               .describe('listen-on', 'The host and/or port for Zordon\'s local Ranger/thug to listen on (i.e. a remote-facing interface at which THIS Zordon can be contacted... through his man).')
+               .describe('listener-name', 'The name of the ranger hook that will listen for Zordon.')
+               .describe('remote-zordon-ttl', 'How long (in seconds) remote Zordons remain in this Zordon\'s MEMORY BANKS after a message is received from them.')
+               .describe('local-broadcast-interval', 'Interval (in seconds) between Zordon "brawwwr" events, which notify other Zordons in the local hook.io neighborhood that ZORDON IS HERE.')
+               .describe('ranger-broadcast-interval', 'Interval (in seconds) between Ranger broadcasts, which notify remote Zordon hosts of this Zordon.')
+               .describe('log-discovered-list', 'If present, interval (in seconds) between log messages sent to console of the list of discovered remote Zordons.')
+               .describe('name', 'Specify the hook\'s name.')
+               .describe('debug', 'Enable debug mode.')
+         
+               .default('name', 'zordon')
+               .default('debug', true)
+               .default('remote-zordon-ttl', 2 * 60 * 60) // 2 hours
+               .default('local-broadcast-interval', 10) // 10 seconds
+               .default('ranger-broadcast-interval', 10) // 10 seconds
+         
+               .alias('ns', 'namespace')
+               .alias('k', 'known')
+               .alias('l', 'listen-on')
+               .alias('rttl', 'remote-zordon-ttl')
+               .alias('lbi', 'local-broadcast-interval')
+               .alias('rbi', 'ranger-broadcast-interval')
+               .alias('ldl', 'log-discovered-list')
+               .alias('rn', 'ranger-name')
+               .alias('n', 'name')
+               .alias('d', 'debug')
+               .alias('h', 'help')
+
+if (optimist.argv.help) {
+  console.error("\n" + optimist.help())
+  return
+}
+else if (!optimist.argv['known'] && !optimist.argv['listen-on']) {
+  // ensure that we're either listening or connecting
+  console.error("\nMust provide either --listen-on/-l or --known/-k.")
+  console.error("\n" + optimist.help())
+  process.exit(1)
+}
+else {
+  var zordon = new Zordon(optimist.argv)
+  zordon.start()
+}

@@ -1,0 +1,23 @@
+{
+  "author": "bryn austin bellomy <bryn.bellomy@gmail.com>",
+  "name": "hook.io-zordon",
+  "description": "wan auto-discovery and connect hook for making friends",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/brynbellomy/hook.io-zordon.git"
+  },
+  "bin": {
+     "hookio-zordon": "./bin/zordon"
+  },
+  "main" : "lib/zordon",
+  "engines": {
+    "node": ">= v0.4.7"
+  },
+  "dependencies": {
+    "hook.io": "0.8.x",
+    "async": "0.1.x",
+	"optimist": "0.3.x"
+  },
+  "devDependencies": {}
+}
